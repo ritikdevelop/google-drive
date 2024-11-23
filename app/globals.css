@@ -58,7 +58,7 @@
 
 @layer utilities {
   /* ===== TYPOGRAPHY */
-  .center{
+  .center {
     @apply flex h-screen items-center justify-center bg-amber-100;
   }
   .h1 {
