@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -22,8 +23,7 @@ import React, { useState } from "react";
 
 type FormType = "sign-in" | "sign-up";
 const AuthForm = ({ type }: { type: FormType }) => {
-
-    const [isLoading,setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   //! 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -89,8 +89,18 @@ const AuthForm = ({ type }: { type: FormType }) => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="form-submit-button">
+          <Button type="submit" className="form-submit-button text-white">
             {type === "sign-in" ? "Sign In" : "Sign Up"}
+
+            {isLoading && (
+              <Image
+                src="/assets/icons/loader.svg"
+                alt="loader"
+                width={24}
+                height={24}
+                className="animate-spint ml-2"
+              />
+            )}
           </Button>
         </form>
       </Form>
