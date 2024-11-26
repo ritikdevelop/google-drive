@@ -1,3 +1,4 @@
+"use server";
 // node-appwrite
 
 import { Client, Account, Databases, Avatars, Storage } from "node-appwrite";
