@@ -3,6 +3,7 @@
 import { createAdminClient } from "@/lib/appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { ID, Query } from "node-appwrite";
+import { parseStringify } from "../utils";
 
 //? Create Account Flow
 // The create account flow is a critical part of the user experience. It should be easy to follow,
@@ -28,6 +29,10 @@ const getUserByEmail = async (email:string) => {
     return result.total > 0 ? result.documents[0] : null;
 };
 
+const handleError = (error:unknown, message:string) => {
+    console.log(error, message);
+    throw error;
+};
 
 //! Send OTP from the user mobile from this function
 const sendEmailOTP = async ({ email }:{email: string}) => {
@@ -38,13 +43,13 @@ const sendEmailOTP = async ({ email }:{email: string}) => {
 
         return session.userId;
     } catch (error) {
-        
+        handleError(error, "Failed to send email OTP");
     }
 }
 
 
 // !Create User account from this function
-const createAccount = async ({
+export const createAccount = async ({
     fullName,
     email,
 }:{
@@ -53,5 +58,26 @@ const createAccount = async ({
 }) => {
     const existingUser = await getUserByEmail(email);
 
-    const accountId = await sendEmailOTP(email);
+    const accountId = await sendEmailOTP({email});
+    if(!accountId) {
+        throw new Error("Failed to send an OTP");
+    }
+
+    if(!existingUser) {
+        const {databases} = await createAdminClient();
+
+        await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.usersCollectionId,
+            ID.unique(),
+            {
+                fullName,
+                email,
+                avatar: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
+                accountId,
+            },
+        );
+    }
+
+    return parseStringify({accountId});
 };
