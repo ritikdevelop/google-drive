@@ -26,6 +26,7 @@ export const createSessionClient = async () => {
   };
 };
 
+//! Create Admin Client from this function
 export const createAdminClient = async () => {
   const client = new Client()
     .setEndpoint(appwriteConfig.endpointUrl)
