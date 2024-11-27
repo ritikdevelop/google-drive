@@ -5,6 +5,7 @@ import { appwriteConfig } from "../appwrite/config";
 import { ID, Query } from "node-appwrite";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
+import { avatarPlaceholderUrl } from "@/constants";
 
 //? Create Account Flow
 // The create account flow is a critical part of the user experience. It should be easy to follow,
@@ -74,7 +75,7 @@ export const createAccount = async ({
             {
                 fullName,
                 email,
-                avatar: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
+                avatar: avatarPlaceholderUrl,
                 accountId,
             },
         );
@@ -101,3 +102,5 @@ export const verifySecret = async ({accountId, password}: {accountId: string, pa
     }
 
 };
+
+export const getCurrentUser = async () => {};
