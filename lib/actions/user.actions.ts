@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { ID, Query } from "node-appwrite";
 import { parseStringify } from "../utils";
+import { cookies } from "next/headers";
 
 //? Create Account Flow
 // The create account flow is a critical part of the user experience. It should be easy to follow,
@@ -35,7 +36,7 @@ const handleError = (error:unknown, message:string) => {
 };
 
 //! Send OTP from the user mobile from this function
-const sendEmailOTP = async ({ email }:{email: string}) => {
+export const sendEmailOTP = async ({ email }:{email: string}) => {
     const { account } = await createAdminClient();
 
     try {
@@ -80,4 +81,23 @@ export const createAccount = async ({
     }
 
     return parseStringify({accountId});
+};
+
+export const verifySecret = async ({accountId, password}: {accountId: string, password: string}) => {
+    try {
+        const { account } = await createAdminClient();
+
+        const session = await account.createSession(accountId, password);
+
+        (await cookies()).set("appwrite-session", session.secret, {
+            path: "/",
+            httpOnly: true,
+            sameSite: "strict",
+            secure: true,
+        });
+        return parseStringify({ sessionId: session.$id });
+    } catch (error) {
+        handleError(error, "Failed to verify OTP");
+    }
+
 };
