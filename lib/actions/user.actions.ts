@@ -6,11 +6,11 @@ import { ID, Query } from "node-appwrite";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
 import { avatarPlaceholderUrl } from "@/constants";
-
+import redirect from "next/navigation";
 //? Create Account Flow
 // The create account flow is a critical part of the user experience. It should be easy to follow,
 
-// 1. Users enters full name and email
+// 1. Users enters fullName and email
 // 2. Check if the user already exist or not
 // 3. If not, create a new user
 // 4. If yes, show the login page
@@ -47,7 +47,7 @@ export const sendEmailOTP = async ({ email }: { email: string }) => {
     } catch (error) {
       handleError(error, "Failed to send email OTP");
     }
-  };
+};
 
 
 // !Create User account from this function
@@ -60,67 +60,29 @@ export const createAccount = async ({
 }) => {
   const existingUser = await getUserByEmail(email);
 
-  if (existingUser) {
-    // If the user already exists, return an error or a message
-    throw new Error("User already exists");
-  }
-
   const accountId = await sendEmailOTP({email});
   if(!accountId) {
       throw new Error("Failed to send an OTP");
   }
 
-  try {
-    const {databases} = await createAdminClient();
-    await databases.createDocument(
-        appwriteConfig.databaseId,
-        appwriteConfig.usersCollectionId,
-        ID.unique(),
-        {
-            fullName,
-            email,
-            avatar: avatarPlaceholderUrl,
-            accountId,
-        },
-    );
-    return parseStringify({accountId});
-  } catch (error) {
-    // Handle the error if document creation fails
-    handleError(error, "Failed to create user account");
+  if(!existingUser) {
+      const {databases} = await createAdminClient();
+
+      await databases.createDocument(
+          appwriteConfig.databaseId,
+          appwriteConfig.usersCollectionId,
+          ID.unique(),
+          {
+              fullName,
+              email,
+              avatar: avatarPlaceholderUrl,
+              accountId,
+          },
+      );
   }
+
+  return parseStringify({accountId});
 };
-// export const createAccount = async ({
-//   fullName,
-//   email,
-// }:{
-//   fullName: string,
-//   email: string,
-// }) => {
-//   const existingUser = await getUserByEmail(email);
-
-//   const accountId = await sendEmailOTP({email});
-//   if(!accountId) {
-//       throw new Error("Failed to send an OTP");
-//   }
-
-//   if(!existingUser) {
-//       const {databases} = await createAdminClient();
-
-//       await databases.createDocument(
-//           appwriteConfig.databaseId,
-//           appwriteConfig.usersCollectionId,
-//           ID.unique(),
-//           {
-//               fullName,
-//               email,
-//               avatar: avatarPlaceholderUrl,
-//               accountId,
-//           },
-//       );
-//   }
-
-//   return parseStringify({accountId});
-// };
 
 //! Verify user Secret from this function
 export const verifySecret = async ({
