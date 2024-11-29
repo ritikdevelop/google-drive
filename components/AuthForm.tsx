@@ -17,7 +17,7 @@ import Image from "next/image";
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { createAccount } from "@/lib/actions/user.actions";
+import { createAccount, signInUser } from "@/lib/actions/user.actions";
 import OtpModal from "./OTPModal";
 
 type FormType = "sign-in" | "sign-up";
@@ -52,12 +52,13 @@ const AuthForm = ({ type }: { type: FormType }) => {
     setErrorMessage("");
 
     try {
-      const user = 
-       await createAccount({
-        fullName: values.fullName || "",
-        email: values.email,
-      })
-      // : await signInUser({email: values.email});
+      const user =
+        type === "sign-up"
+          ? await createAccount({
+              fullName: values.fullName || "",
+              email: values.email,
+            })
+          : await signInUser({ email: values.email });
       setAccountId(user.accountId);
     } catch (error) {
       setErrorMessage("Failed to create an account. Please try again.");
@@ -157,10 +158,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
       {/*//todo OTP VERIFICATION */}
       {accountId && (
-        <OtpModal email={form.getValues("email")} accountId={accountId} /> 
-    )}
-
-
+        <OtpModal email={form.getValues("email")} accountId={accountId} />
+      )}
     </>
   );
 };
