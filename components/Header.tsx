@@ -11,11 +11,13 @@ const Header = () => {
       <Search />
       <div className="header-wrapper">
         <FileUploader />
-        <form action={async () => {
-          'use server';
+        <form
+          action={async () => {
+            "use server";
 
-          await signOutUser();
-        }}>
+            await signOutUser();
+          }}
+        >
           <Button type="submit" className="sign-out-button">
             <Image
               src="/assets/icons/logout.svg"
