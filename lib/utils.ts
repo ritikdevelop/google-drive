@@ -38,6 +38,7 @@ export const getFileType = (fileName: string) => {
 
   const documentExtensions = [
     "pdf",
+    "HEIC",
     "doc",
     "docx",
     "txt",
@@ -63,7 +64,7 @@ export const getFileType = (fileName: string) => {
     "afphoto",
     "afphoto",
   ];
-  const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"];
+  const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp", "heic"];
   const videoExtensions = ["mp4", "avi", "mov", "mkv", "webm"];
   const audioExtensions = ["mp3", "wav", "ogg", "flac"];
 
