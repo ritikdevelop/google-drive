@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useState } from "react";
+
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { cn, convertFileToUrl, getFileType } from "@/lib/utils";
@@ -29,7 +30,7 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
       const uploadPromises = acceptedFiles.map(async (file) => {
         if (file.size > MAX_FILE_SIZE) {
           setFiles((prevFiles) =>
-            prevFiles.filter((f) => f.name !== file.name)
+            prevFiles.filter((f) => f.name !== file.name),
           );
 
           return toast({
@@ -47,23 +48,23 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
           (uploadedFile) => {
             if (uploadedFile) {
               setFiles((prevFiles) =>
-                prevFiles.filter((f) => f.name !== file.name)
+                prevFiles.filter((f) => f.name !== file.name),
               );
             }
-          }
+          },
         );
       });
 
       await Promise.all(uploadPromises);
     },
-    [ownerId, accountId, path]
+    [ownerId, accountId, path],
   );
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const handleRemoveFile = (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>,
-    fileName: string
+    fileName: string,
   ) => {
     e.stopPropagation();
     setFiles((prevFiles) => prevFiles.filter((file) => file.name !== fileName));
@@ -123,7 +124,6 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
           })}
         </ul>
       )}
-
     </div>
   );
 };
