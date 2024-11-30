@@ -30,7 +30,6 @@ export const calculatePercentage = (sizeInBytes: number) => {
   return Number(percentage.toFixed(2));
 };
 
-
 // ! Get File Type and extension from this function
 export const getFileType = (fileName: string) => {
   const extension = fileName.split(".").pop()?.toLowerCase();
@@ -77,7 +76,6 @@ export const getFileType = (fileName: string) => {
   return { type: "other", extension };
 };
 
-
 // ! Get DateTime from this function
 export const formatDateTime = (isoString: string | null | undefined) => {
   if (!isoString) return "—";
@@ -114,11 +112,10 @@ export const formatDateTime = (isoString: string | null | undefined) => {
   return `${time}, ${day} ${month}`;
 };
 
-
 // ! Get file icon from this function
 export const getFileIcon = (
   extension: string | undefined,
-  type: FileType | string,
+  type: FileType | string
 ) => {
   switch (extension) {
     // Document
@@ -188,7 +185,6 @@ export const constructDownloadUrl = (bucketFileId: string) => {
   return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketFileId}/download?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}`;
 };
 
-
 //! DASHBOARD UTILS
 export const getUsageSummary = (totalSpace: any) => {
   return [
@@ -225,7 +221,6 @@ export const getUsageSummary = (totalSpace: any) => {
     },
   ];
 };
-
 
 // ! Get FileType from this function
 export const getFileTypesParams = (type: string) => {
