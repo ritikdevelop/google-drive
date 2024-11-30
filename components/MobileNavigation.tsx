@@ -1,26 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Image from "next/image";
+import React, { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@radix-ui/react-separator";
 import { navItems } from "@/constants";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
-import FileUploader from "./FileUploader";
+import { Button } from "@/components/ui/button";
+import FileUploader from "@/components/FileUploader";
 import { signOutUser } from "@/lib/actions/user.actions";
 
 interface Props {
-  ownerId: string;
+  $id: string;
   accountId: string;
   fullName: string;
   avatar: string;
@@ -28,7 +26,7 @@ interface Props {
 }
 
 const MobileNavigation = ({
-  ownerId,
+  $id: ownerId,
   accountId,
   fullName,
   avatar,
@@ -46,11 +44,12 @@ const MobileNavigation = ({
         height={52}
         className="h-auto"
       />
+
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
           <Image
             src="/assets/icons/menu.svg"
-            alt="search"
+            alt="Search"
             width={30}
             height={30}
           />
@@ -60,7 +59,7 @@ const MobileNavigation = ({
             <div className="header-user">
               <Image
                 src={avatar}
-                alt="avatar image"
+                alt="avatar"
                 width={44}
                 height={44}
                 className="header-user-avatar"
@@ -80,7 +79,7 @@ const MobileNavigation = ({
                   <li
                     className={cn(
                       "mobile-nav-item",
-                      pathname === url && "shad-active"
+                      pathname === url && "shad-active",
                     )}
                   >
                     <Image
@@ -90,7 +89,7 @@ const MobileNavigation = ({
                       height={24}
                       className={cn(
                         "nav-icon",
-                        pathname === url && "nav-icon-active"
+                        pathname === url && "nav-icon-active",
                       )}
                     />
                     <p>{name}</p>
@@ -101,8 +100,9 @@ const MobileNavigation = ({
           </nav>
 
           <Separator className="my-5 bg-light-200/20" />
-          <div className="flex justify-between flex-col gap-5 pb-5">
-            <FileUploader />
+
+          <div className="flex flex-col justify-between gap-5 pb-5">
+            <FileUploader ownerId={ownerId} accountId={accountId} />
             <Button
               type="submit"
               className="mobile-sign-out-button"
@@ -110,10 +110,11 @@ const MobileNavigation = ({
             >
               <Image
                 src="/assets/icons/logout.svg"
-                alt="logout image"
+                alt="logo"
                 width={24}
                 height={24}
               />
+              <p>Logout</p>
             </Button>
           </div>
         </SheetContent>
@@ -121,4 +122,5 @@ const MobileNavigation = ({
     </header>
   );
 };
+
 export default MobileNavigation;
