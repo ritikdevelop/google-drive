@@ -1,3 +1,5 @@
+"use client";
+
 import { Models } from "node-appwrite";
 
 import Link from "next/link";
@@ -31,7 +33,7 @@ const Card = ({ file }: { file: Models.Document }) => {
           className="body-2 text-light-100"
         />
         <p className="caption line-clamp-1 text-light-200">
-          By: {file.owner.fullName}
+          By: {file.owner.fullName} - Bucket: {file.bucketField}
         </p>
       </div>
     </Link>
