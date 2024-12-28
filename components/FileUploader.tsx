@@ -44,7 +44,7 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
           });
         }
 
-        return uploadFile({ file, ownerId, accountId, path }).then(
+        return uploadFile({ file, ownerId, accountId, path}).then(
           (uploadedFile) => {
             if (uploadedFile) {
               setFiles((prevFiles) =>
