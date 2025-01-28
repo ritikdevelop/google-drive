@@ -7,7 +7,6 @@ import { ID, Models, Query } from "node-appwrite";
 import { constructFileUrl, getFileType, parseStringify } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/actions/user.actions";
-
 const handleError = (error: unknown, message: string) => {
   console.log(error, message);
   throw error;
@@ -27,7 +26,7 @@ export const uploadFile = async ({
     const bucketFile = await storage.createFile(
       appwriteConfig.bucketId,
       ID.unique(),
-      inputFile
+      inputFile,
     );
 
     const fileDocument = {
@@ -47,7 +46,7 @@ export const uploadFile = async ({
         appwriteConfig.databaseId,
         appwriteConfig.filesCollectionId,
         ID.unique(),
-        fileDocument
+        fileDocument,
       )
       .catch(async (error: unknown) => {
         await storage.deleteFile(appwriteConfig.bucketId, bucketFile.$id);
@@ -66,7 +65,7 @@ const createQueries = (
   types: string[],
   searchText: string,
   sort: string,
-  limit?: number
+  limit?: number,
 ) => {
   const queries = [
     Query.or([
@@ -83,7 +82,7 @@ const createQueries = (
     const [sortBy, orderBy] = sort.split("-");
 
     queries.push(
-      orderBy === "asc" ? Query.orderAsc(sortBy) : Query.orderDesc(sortBy)
+      orderBy === "asc" ? Query.orderAsc(sortBy) : Query.orderDesc(sortBy),
     );
   }
 
@@ -108,10 +107,10 @@ export const getFiles = async ({
     const files = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollectionId,
-      queries
+      queries,
     );
 
-    // console.log({ files });
+    console.log({ files });
     return parseStringify(files);
   } catch (error) {
     handleError(error, "Failed to get files");
@@ -134,7 +133,7 @@ export const renameFile = async ({
       fileId,
       {
         name: newName,
-      }
+      },
     );
 
     revalidatePath(path);
@@ -158,7 +157,7 @@ export const updateFileUsers = async ({
       fileId,
       {
         users: emails,
-      }
+      },
     );
 
     revalidatePath(path);
@@ -179,7 +178,7 @@ export const deleteFile = async ({
     const deletedFile = await databases.deleteDocument(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollectionId,
-      fileId
+      fileId,
     );
 
     if (deletedFile) {
@@ -193,7 +192,7 @@ export const deleteFile = async ({
   }
 };
 
-//! ============================== TOTAL FILE SPACE USED
+// ============================== TOTAL FILE SPACE USED
 export async function getTotalSpaceUsed() {
   try {
     const { databases } = await createSessionClient();
@@ -203,7 +202,7 @@ export async function getTotalSpaceUsed() {
     const files = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollectionId,
-      [Query.equal("owner", [currentUser.$id])]
+      [Query.equal("owner", [currentUser.$id])],
     );
 
     const totalSpace = {
@@ -213,7 +212,7 @@ export async function getTotalSpaceUsed() {
       audio: { size: 0, latestDate: "" },
       other: { size: 0, latestDate: "" },
       used: 0,
-      all: 2 * 1024 * 1024 * 1024 /*//todo 2GB available bucket storage */,
+      all: 2 * 1024 * 1024 * 1024 /* 2GB available bucket storage */,
     };
 
     files.documents.forEach((file) => {
